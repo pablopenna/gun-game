@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://b0pwr01cjq2dj"]
+
+[ext_resource type="PackedScene" uid="uid://ybgyf6l21nl3" path="res://scenes/player/player.tscn" id="1_nnsk1"]
+[ext_resource type="Texture2D" uid="uid://dwp1qptrbch4v" path="res://icon.svg" id="2_rwgxs"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_4wyf3"]
+
+[node name="World" type="Node3D"]
+
+[node name="Player" parent="." instance=ExtResource("1_nnsk1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.27206, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_4wyf3")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.20086, -11.7898)
+texture = ExtResource("2_rwgxs")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.774779, 0.632232, 0, -0.632232, 0.774779, -12.8216, 0, 0)
