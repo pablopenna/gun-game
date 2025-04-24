@@ -1,15 +1,52 @@
-[gd_scene load_steps=4 format=3 uid="uid://ybgyf6l21nl3"]
+[gd_scene load_steps=9 format=3 uid="uid://ybgyf6l21nl3"]
 
-[ext_resource type="Script" uid="uid://4cxtff6memlo" path="res://scenes/player/player.gd" id="1_dovo2"]
 [ext_resource type="Script" uid="uid://clrj7kj7olvbs" path="res://scenes/player/player_camera.gd" id="2_gmlin"]
+[ext_resource type="Script" uid="uid://dklgu0ybgumf4" path="res://scenes/states/state_machine.gd" id="3_gmlin"]
+[ext_resource type="Script" uid="uid://b0ahmg733rab7" path="res://scenes/player/states/player_wallstand.gd" id="4_lvxji"]
+[ext_resource type="Script" uid="uid://d0umm3j02reoj" path="res://scenes/player/states/player_move.gd" id="4_p47bc"]
+[ext_resource type="Script" uid="uid://de0dkng62hmsu" path="res://scenes/player/states/player_wallrun.gd" id="5_p47bc"]
+[ext_resource type="Script" uid="uid://biew6k7d2x2mj" path="res://scenes/player/wall_raycast.gd" id="6_75vfm"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_x7p2l"]
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lvxji"]
+
 [node name="Player" type="CharacterBody3D"]
-script = ExtResource("1_dovo2")
 
 [node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 script = ExtResource("2_gmlin")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_x7p2l")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_lvxji")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state", "actor")]
+script = ExtResource("3_gmlin")
+initial_state = NodePath("move")
+actor = NodePath("..")
+
+[node name="move" type="Node" parent="StateMachine" node_paths=PackedStringArray("camera")]
+script = ExtResource("4_p47bc")
+camera = NodePath("../../Camera3D")
+
+[node name="wallstand" type="Node" parent="StateMachine" node_paths=PackedStringArray("camera", "raycast")]
+script = ExtResource("4_lvxji")
+camera = NodePath("../../Camera3D")
+raycast = NodePath("../../WallRaycast")
+
+[node name="wallrun" type="Node" parent="StateMachine" node_paths=PackedStringArray("camera", "raycast")]
+script = ExtResource("5_p47bc")
+camera = NodePath("../../Camera3D")
+raycast = NodePath("../../WallRaycast")
+
+[node name="WallRaycast" type="RayCast3D" parent="."]
+top_level = true
+enabled = false
+target_position = Vector3(0, 0, 0)
+debug_shape_custom_color = Color(1, 0, 0, 1)
+script = ExtResource("6_75vfm")

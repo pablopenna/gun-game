@@ -1,23 +1,55 @@
-[gd_scene load_steps=4 format=3 uid="uid://b0pwr01cjq2dj"]
+[gd_scene load_steps=6 format=3 uid="uid://b0pwr01cjq2dj"]
 
 [ext_resource type="PackedScene" uid="uid://ybgyf6l21nl3" path="res://scenes/player/player.tscn" id="1_nnsk1"]
 [ext_resource type="Texture2D" uid="uid://dwp1qptrbch4v" path="res://icon.svg" id="2_rwgxs"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_4wyf3"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_rwgxs"]
+size = Vector3(0.4, 7.5, 7.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4wyf3"]
+size = Vector3(0.4, 7.5, 7.5)
+
 [node name="World" type="Node3D"]
 
 [node name="Player" parent="." instance=ExtResource("1_nnsk1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.27206, 0)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="BasePlatform" type="StaticBody3D" parent="."]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BasePlatform"]
 shape = SubResource("WorldBoundaryShape3D_4wyf3")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.20086, -11.7898)
 texture = ExtResource("2_rwgxs")
 
+[node name="Sprite3D2" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.42459, 2.20086, -11.7898)
+texture = ExtResource("2_rwgxs")
+
+[node name="Sprite3D3" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.0686, 2.20086, -11.7898)
+texture = ExtResource("2_rwgxs")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.774779, 0.632232, 0, -0.632232, 0.774779, -12.8216, 0, 0)
+
+[node name="Wall" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5601, 3.17735, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall"]
+shape = SubResource("BoxShape3D_rwgxs")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall"]
+mesh = SubResource("BoxMesh_4wyf3")
+
+[node name="Wall2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.93833, 3.66698, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall2"]
+shape = SubResource("BoxShape3D_rwgxs")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall2"]
+mesh = SubResource("BoxMesh_4wyf3")
