@@ -49,6 +49,8 @@ func physics_process(delta: float) -> void:
 	var input_dir := Input.get_vector("player_left", "player_right", "player_forward", "player_backwards")
 	if input_dir == Vector2.ZERO:
 		change_to_state.emit("player_wallstand")
-	# var direction := (camera.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	var direction := (camera.global_transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
-	# actor.move_and_slide()
+	actor.velocity = direction * SPEED
+	
+	actor.move_and_slide()
