@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PlayerStats" load_steps=2 format=3 uid="uid://bparb6teouqj1"]
+
+[ext_resource type="Script" uid="uid://8rpkjxotsiqr" path="res://scenes/player/stats/player_stats.gd" id="1_2eiml"]
+
+[resource]
+script = ExtResource("1_2eiml")
+move_speed = 10.0
+jump_speed = 4.5
+threshold_to_wall_run = 1.0
+metadata/_custom_type_script = "uid://8rpkjxotsiqr"

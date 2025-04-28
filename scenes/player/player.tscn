@@ -1,11 +1,18 @@
-[gd_scene load_steps=9 format=3 uid="uid://ybgyf6l21nl3"]
+[gd_scene load_steps=16 format=3 uid="uid://ybgyf6l21nl3"]
 
 [ext_resource type="Script" uid="uid://clrj7kj7olvbs" path="res://scenes/player/player_camera.gd" id="2_gmlin"]
 [ext_resource type="Script" uid="uid://dklgu0ybgumf4" path="res://scenes/states/state_machine.gd" id="3_gmlin"]
 [ext_resource type="Script" uid="uid://b0ahmg733rab7" path="res://scenes/player/states/player_wallstand.gd" id="4_lvxji"]
-[ext_resource type="Script" uid="uid://d0umm3j02reoj" path="res://scenes/player/states/player_move.gd" id="4_p47bc"]
+[ext_resource type="Script" uid="uid://vt14qcovufof" path="res://scenes/states/composed_state.gd" id="5_fm80t"]
 [ext_resource type="Script" uid="uid://de0dkng62hmsu" path="res://scenes/player/states/player_wallrun.gd" id="5_p47bc"]
 [ext_resource type="Script" uid="uid://biew6k7d2x2mj" path="res://scenes/player/wall_raycast.gd" id="6_75vfm"]
+[ext_resource type="Script" uid="uid://bpd8rj6t6i31v" path="res://scenes/player/states/components/apply_gravity.gd" id="6_gx1jg"]
+[ext_resource type="Script" uid="uid://du1076p4c6qpa" path="res://scenes/player/states/components/direction.gd" id="7_ugbui"]
+[ext_resource type="Script" uid="uid://cl2g13iu43id6" path="res://scenes/player/states/components/jump_input.gd" id="8_fcs02"]
+[ext_resource type="Resource" uid="uid://bparb6teouqj1" path="res://scenes/player/stats/player_stats.tres" id="9_gx1jg"]
+[ext_resource type="Script" uid="uid://ccnly66dn1rnp" path="res://scenes/player/states/components/move_input.gd" id="9_myrg7"]
+[ext_resource type="Script" uid="uid://bnd2nkwhhghjj" path="res://scenes/player/states/components/attach_to_wall.gd" id="10_kvlxm"]
+[ext_resource type="Script" uid="uid://vf717j3kwxay" path="res://scenes/player/states/components/move_and_slide.gd" id="11_uf5tr"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_x7p2l"]
 
@@ -27,12 +34,8 @@ mesh = SubResource("CapsuleMesh_lvxji")
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state", "actor")]
 script = ExtResource("3_gmlin")
-initial_state = NodePath("move")
+initial_state = NodePath("player_move")
 actor = NodePath("..")
-
-[node name="move" type="Node" parent="StateMachine" node_paths=PackedStringArray("camera")]
-script = ExtResource("4_p47bc")
-camera = NodePath("../../Camera3D")
 
 [node name="wallstand" type="Node" parent="StateMachine" node_paths=PackedStringArray("camera", "raycast")]
 script = ExtResource("4_lvxji")
@@ -43,6 +46,36 @@ raycast = NodePath("../../WallRaycast")
 script = ExtResource("5_p47bc")
 camera = NodePath("../../Camera3D")
 raycast = NodePath("../../WallRaycast")
+
+[node name="player_move" type="Node" parent="StateMachine"]
+script = ExtResource("5_fm80t")
+
+[node name="apply_gravity" type="Node" parent="StateMachine/player_move"]
+script = ExtResource("6_gx1jg")
+
+[node name="direction" type="Node" parent="StateMachine/player_move" node_paths=PackedStringArray("player_camera")]
+script = ExtResource("7_ugbui")
+player_camera = NodePath("../../../Camera3D")
+
+[node name="jump_input" type="Node" parent="StateMachine/player_move"]
+script = ExtResource("8_fcs02")
+player_stats = ExtResource("9_gx1jg")
+
+[node name="move_input" type="Node" parent="StateMachine/player_move" node_paths=PackedStringArray("player_camera", "direction_component")]
+script = ExtResource("9_myrg7")
+player_stats = ExtResource("9_gx1jg")
+player_camera = NodePath("../../../Camera3D")
+direction_component = NodePath("../direction")
+
+[node name="attach_to_wall" type="Node" parent="StateMachine/player_move" node_paths=PackedStringArray("player_camera", "direction_component", "attach_to_wall_state")]
+script = ExtResource("10_kvlxm")
+player_stats = ExtResource("9_gx1jg")
+player_camera = NodePath("../../../Camera3D")
+direction_component = NodePath("../direction")
+attach_to_wall_state = NodePath("../../wallstand")
+
+[node name="move_and_slide" type="Node" parent="StateMachine/player_move"]
+script = ExtResource("11_uf5tr")
 
 [node name="WallRaycast" type="RayCast3D" parent="."]
 top_level = true

@@ -23,10 +23,9 @@ func physics_process(delta: float) -> void:
 		actor.velocity.y = JUMP_VELOCITY
 
 	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir := Input.get_vector("player_left", "player_right", "player_forward", "player_backwards")
-	
 	var direction := (camera.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
 	if direction:
 		actor.velocity.x = move_toward(actor.velocity.x, direction.x * SPEED, SPEED)
 		actor.velocity.z = move_toward(actor.velocity.z, direction.z * SPEED, SPEED)
