@@ -34,6 +34,7 @@ func _adjust_to_wall():
 	actor.position = wall_contact_point
 
 func enter(data: Dictionary):
+	print("WALLSTAND")
 	_adjust_to_wall()
 	actor.velocity = Vector3.ZERO
 	

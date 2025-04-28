@@ -29,7 +29,22 @@ func _process_wall():
 		return
 	actor.position = wall_contact_point
 
+# Does not work as when the actor is away from the wall it instantly transitions to another state
+# and this does not have time to apply its effects
+func _adjust_to_wall():
+	actor = (actor as CharacterBody3D)
+	if actor.is_on_wall():
+		_wall_normal = actor.get_wall_normal()
+	## HACK: when rotating it may stop colliding with the wall.
+	# We use a raycast to detect the wall and make sure it is colliding with it
+	var wall_contact_point = raycast._detect_wall(_wall_normal)
+	if wall_contact_point == null:
+		return
+	print("adjusting to wall")
+	actor.velocity += 500 * (actor as CharacterBody3D).global_position.direction_to(wall_contact_point).normalized()
+
 func enter(_data):
+	print("WALLRUN")
 	_process_wall()
 
 func exit(_state):
@@ -39,9 +54,6 @@ func exit(_state):
 	
 func physics_process(delta: float) -> void:
 	actor = actor as CharacterBody3D
-	
-	if not actor.is_on_wall():
-		change_to_state.emit("player_move")
 		
 	if Input.is_action_just_pressed("player_jump"):
 		actor.velocity = _wall_normal * JUMP_VELOCITY
@@ -52,5 +64,13 @@ func physics_process(delta: float) -> void:
 	var direction := (camera.global_transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
 	actor.velocity = direction * SPEED
+	print("before")
+	print(actor.velocity)
+	_adjust_to_wall()
+	print("after")
+	print(actor.velocity)
 	
 	actor.move_and_slide()
+	
+	if not actor.is_on_wall():
+		change_to_state.emit("player_move")

@@ -8,10 +8,12 @@ const THRESHOLD_TO_WALL_RUN = 1.0
 
 func _ready():
 	state_name = "player_move"
-	
+
+func enter(_data):
+	print("MOVE")
+
 func physics_process(delta: float) -> void:
 	actor = actor as CharacterBody3D # Just for typing
-	
 	# Add the gravity.
 	if not actor.is_on_floor():
 		actor.velocity += actor.get_gravity() * delta
